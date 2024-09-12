@@ -28,9 +28,13 @@ jobs:
         path: |
           src/go/pkg/mod
           src/go.sum
-        key: ${{ runner.os }}-go-${{ hashFiles('src/**/go.sum') }}
+        key: ${{ runner.os }}-go-${{ hashFiles('src/**/go.mod') }}
         restore-keys: |
           ${{ runner.os }}-go-
+
+    - name: Ensure go.sum is created and up-to-date
+      working-directory: src
+      run: go mod tidy
 
     - name: Build
       working-directory: src
