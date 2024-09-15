@@ -17,6 +17,7 @@ const (
 	rootDir       = "./files"
 	privateKeyPath = "id_rsa" // path to priv key for auth
 )
+
 func auth(username, password string) bool {
 	expectedPassword := os.Getenv("SFTP_PASSWORD")
 	if expectedPassword == "" {
@@ -36,7 +37,12 @@ func handleConnection(conn net.Conn) {
 	}
 
 	config := &ssh.ServerConfig{
-		NoClientAuth: false,
+		PasswordCallback: func(c ssh.ConnMetadata, pass []byte) (*ssh.Permissions, error) {
+			if auth(c.User(), string(pass)) {
+				return nil, nil
+			}
+			return nil, fmt.Errorf("password rejected for %q", c.User())
+		},
 	}
 
 	config.AddHostKey(privateKey)
