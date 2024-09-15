@@ -5,8 +5,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
@@ -27,13 +25,16 @@ func auth(username, password string) bool {
 }
 
 func handleConnection(conn net.Conn) {
+	defer conn.Close()
 	privateBytes, err := os.ReadFile(privateKeyPath)
 	if err != nil {
-		log.Fatalf("Failed to read private key: %v", err)
+		log.Printf("Failed to read private key: %v", err)
+		return
 	}
 	privateKey, err := ssh.ParsePrivateKey(privateBytes)
 	if err != nil {
-		log.Fatalf("Failed to parse private key: %v", err)
+		log.Printf("Failed to parse private key: %v", err)
+		return
 	}
 
 	config := &ssh.ServerConfig{
@@ -61,6 +62,7 @@ func handleConnection(conn net.Conn) {
 }
 
 func handleChannel(newChannel ssh.NewChannel) {
+	defer newChannel.Close()
 	channel, reqs, err := newChannel.Accept()
 	if err != nil {
 		log.Printf("Could not accept channel: %v", err)
