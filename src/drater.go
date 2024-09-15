@@ -93,6 +93,20 @@ func main() {
 		log.Fatalf("Failed to start listener: %v", err)
 	}
 	defer listener.Close()
+
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		log.Fatalf("Failed to get IP addresses: %v", err)
+	}
+
+	fmt.Println("SFTP Server is running on the following IP addresses:")
+	for _, addr := range addrs {
+		if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+			if ipNet.IP.To4() != nil {
+				fmt.Printf("IP: %s\n", ipNet.IP.String())
+			}
+		}
+	}
 	fmt.Printf("SFTP Server started on port%s\n", port)
 
 	for {
