@@ -1,16 +1,14 @@
 # drateR-go
 
-**drateR** is a simple SFTP (Secure File Transfer Protocol) server implemented in Go. It provides a secure way to upload and download files using the SFTP protocol over SSH.
+**drateR** is a simple SFTP server in Go.
 
 ## Prerequisites
 
 - Go 1.16 or higher
-- SSH private key for authentication
-- Environment variables for configuration
 
 ---
 ## Download
-  First, clone the repository to your local machine:
+  Clone the repository to your local machine:
 
 ```sh
 git clone https://github.com/zeusssz/drateR.git
