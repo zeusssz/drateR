@@ -1,3 +1,5 @@
+// fix this entire mess some day
+
 package main
 
 import (
